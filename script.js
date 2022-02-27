@@ -4,14 +4,18 @@ const headerInput = document.querySelector('.header-input');
 const todoList = document.querySelector('.todo-list');
 const todoCompleted = document.querySelector('.todo-completed');
 
+
+
+
 const toDoData = [];
 
 const render = function () {
   todoList.innerHTML = '';
   todoCompleted.innerHTML = '';
-  toDoData.forEach(function (item) {
+  toDoData.forEach(function (item, index) {
     const li = document.createElement('li');
     li.classList.add('todo-item');
+    li.dataset.index = index;
     li.innerHTML = '<span class="text-todo">' + item.text + '</span>' + 
           '<div class="todo-buttons">' +
 					'<button class="todo-remove"></button>' +
@@ -22,22 +26,23 @@ const render = function () {
     } else {
       todoList.append(li);
     }
-    console.log(todoList);
+     
     li.querySelector('.todo-complete').addEventListener('click', function (){
       item.completed = !item.completed;
       render();
     });
+    
+    
     li.querySelector('.todo-remove').addEventListener('click', function (){
-     if (item.completed) {
-      todoCompleted.remove(li);
-    } else {
-      todoList.remove(li);
-    }
+      toDoData.splice(index, 1);
+    
       render();
-    })
+    });
+     
     
   });
-}
+  
+};
 
 todoControl.addEventListener('submit', function (event) {
   event.preventDefault();
@@ -46,7 +51,14 @@ todoControl.addEventListener('submit', function (event) {
     text: headerInput.value,
     completed: false
   }
-  toDoData.push(newToDo);
-  headerInput.value = '';
-  render();
+  if (!headerInput.value.trim() == '') {
+    toDoData.push(newToDo);
+    headerInput.value = '';
+    render();
+  } else {
+    alert('Заполните поле');
+  }
+  
 })
+
+
